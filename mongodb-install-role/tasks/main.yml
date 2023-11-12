@@ -1,0 +1,7 @@
+---
+# tasks file for mongodb-role
+- name: Prepare server environment for MongoDb installation
+  include_tasks: prepare_mongodb_env.yml
+
+- name: Install MongoDb
+  include_tasks: install_mongodb.yml

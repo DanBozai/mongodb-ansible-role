@@ -1,0 +1,55 @@
+---
+- name: Install gnupg, curl
+  apt:
+    name:
+      - gnupg
+      - curl
+    state: present
+
+- name: Transfer 'importMongoGPGKey.sh' script in /tmp
+  copy:
+    src: ../files/importMongoGPGKey.sh
+    dest: /tmp
+    mode: '0100'
+
+- name: Ensure MongoDb GPG key is present
+  stat:
+    path: /usr/share/keyrings/mongodb-server-7.0.gpg
+  register: mongodbGPG
+
+- name: Ensure MongoDb APT repository is  present
+  stat:
+    path: /etc/apt/sources.list.d/mongodb-org-7.0.list
+  register: mongodbRepo
+
+- name: Execute 'importMongoGPGKey.sh'
+  shell: |
+    /tmp/importMongoGPGKey.sh
+  when: not mongodbGPG.stat.exists or not mongodbRepo.stat.exists
+
+- name: Remove 'importMongoGPGKey.sh' from /tmp
+  file:
+    path: /tmp/importMongoGPGKey.sh
+    state: absent
+
+- name: Ensure libssl1.1 package is present
+  shell: |
+    dpkg -s libssl1.1 | grep "Status"
+  register: libsslInfo
+  ignore_errors: true
+
+- name: debug
+  debug:
+    msg: "{{ libsslInfo.stdout_lines }}"
+
+- name: Download libssl1.1
+  get_url:
+    url: http://ftp.de.debian.org/debian/pool/main/o/openssl/libssl1.1_1.1.1w-0+deb11u1_amd64.deb
+    dest: /tmp
+  when: "'Status: install ok installed' not in libsslInfo.stdout_lines"
+
+- name: Install libssl package
+  shell: |
+    sudo dpkg -i /tmp/libssl1.1_1.1.1w-0+deb11u1_amd64.deb
+  when: "'Status: install ok installed' not in libsslInfo.stdout_lines"
+

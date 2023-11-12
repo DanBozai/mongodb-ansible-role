@@ -1,0 +1,7 @@
+---
+- name: Install and setup mongodb
+  hosts: db1
+  become: yes
+
+  roles:
+    - name: mongodb-install-role

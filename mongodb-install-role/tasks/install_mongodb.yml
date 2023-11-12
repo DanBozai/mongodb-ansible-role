@@ -1,0 +1,20 @@
+---
+#Install mongodb
+
+- name: Install MongoDb
+  apt:
+    name: mongodb-org
+    update_cache: yes
+    state: present
+
+- name: Prevent MongoDb from being upgraded
+  dpkg_selections:
+    name: "{{ item }}"
+    selection: hold
+  loop:
+      - mongodb-org
+      - mongodb-org-database
+      - mongodb-org-server
+      - mongodb-mongosh
+      - mongodb-org-mongos
+      - mongodb-org-tools
