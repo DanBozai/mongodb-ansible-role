@@ -1,2 +1,4 @@
 ---
 # tasks file for mongodb-config-servers-role
+- name: Copy the new mongodb.conf template and start the mongod
+  include_tasks: start-config-servers.yml
