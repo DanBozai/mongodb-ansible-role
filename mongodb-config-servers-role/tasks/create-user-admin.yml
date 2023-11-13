@@ -1,0 +1,4 @@
+---
+- name: Create mongodb user admin
+  vars:
+    ansible_python_interpreter: /home/mongodb/miniconda3/envs/pymongo_env/bin/python3.12
