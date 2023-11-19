@@ -1,0 +1,38 @@
+---
+- name: Copy 'mongod.conf' file to support replica set initiate
+  become: yes
+  copy:
+    src: ../files/mongod-config-replica-set
+    dest: /etc/mongod.conf
+    mode: '0644'
+
+- name: Restart mongod service
+  become: yes
+  service:
+    name: mongod
+    state: restarted
+
+
+- name: Copy 'initReplica.sh' script
+  copy:
+    src: ../files/initReplica.sh
+    dest: ~/Downloads/
+    mode: '0700'
+
+- name: Execute 'initReplica.sh' to initiate the config cluster
+  become: no
+  shell: ~/Downloads/initReplica.sh "{{ mongo_config_cluster_ips }}" "{{ mongod_config_server_port }}" "{{ mongodb_user }}" "{{ mongodb_passw }}"
+  register: result
+
+- name: debug message 'initReplica.sh'
+  debug:
+    msg: "{{ result.stdout_lines }}"
+
+
+- name: verify if sv node is Master
+  community.mongodb.mongodb_shell:
+    login_port: "{{ mongod_config_server_port }}"
+    login_user: "{{ mongodb_user }}"
+    login_password: "{{ mongodb_passw }}"
+    login_database: "admin"
+    eval: "rs.status()"

@@ -18,3 +18,23 @@
       - mongodb-mongosh
       - mongodb-org-mongos
       - mongodb-org-tools
+
+- name: Verify if keys directory exist
+  become: no
+  stat:
+    path: /var/lib/mongodb/keys
+  register: keys_dir
+
+- name: Create directory keys
+  become: no
+  shell: mkdir /var/lib/mongodb/keys
+  when: not keys_dir.stat.exists
+
+- name: Copy key file
+  become: no
+  copy:
+    src: ~/mongodKey
+    dest: /var/lib/mongodb/keys/mongodKey
+    owner: "mongodb"
+    group: "mongodb"
+    mode: '0400'

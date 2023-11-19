@@ -7,8 +7,16 @@
     - name: mongodb-install-role
 
 - name: Setup and start mongodb config-cluster
-  hosts: config_cluster
+  hosts: config_cluster config_cluster_primary
   become: yes
- 
+
   roles:
    - name: mongodb-config-servers-role
+
+
+- name: Initialize replica set config cluster
+  hosts: config_cluster_primary
+  become: no
+
+  roles:
+    - name: initialize-config-rs-role

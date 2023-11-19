@@ -1,0 +1,26 @@
+---
+- name: Copy 'createAnsibleDbUser' script
+  become: no
+  copy:
+    src: ../files/createAnsibleDbUser.py
+    dest: ~/Downloads
+    mode: '0700'
+
+- name: Copy default 'mongod.conf' file
+  become: yes
+  copy:
+    src: ../files/mongod-config-file-default
+    dest: /etc/mongod.conf
+    mode: '0644'
+
+- name: Restart mongod service
+  become: yes
+  service:
+    name: mongod
+    state: restarted
+
+- name: Execute 'createAnsibleDbUser.py' to create a default user for database
+  become: no
+  shell: ~/Downloads/createAnsibleDbUser.py "{{ mongodb_user }}" "{{ mongodb_passw }}"
+  register: script_output
+  changed_when: "'User created successfully' in script_output.stdout"

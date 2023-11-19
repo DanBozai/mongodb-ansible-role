@@ -1,11 +1,11 @@
 ---
 #copy mongodb.conf with authorization disabled
-- name: Copy the new mongodb conf file
+- name: Copy a new 'mongod.conf' file
   copy:
     src: ../files/mongodb-config-file
     dest: /etc/mongod.conf
 
-- name: Start config servers
+- name: Start and enable mongod service
   service:
     name: mongod
     state: started

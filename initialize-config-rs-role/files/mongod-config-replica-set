@@ -1,4 +1,3 @@
-
 storage:
   dbPath: /var/lib/mongodb
 
@@ -16,8 +15,10 @@ processManagement:
   timeZoneInfo: /usr/share/zoneinfo
 
 security:
+
   authorization: enabled
   keyFile: /var/lib/mongodb/keys/mongodKey
+
 
 replication:
   replSetName: "cfg1svr"

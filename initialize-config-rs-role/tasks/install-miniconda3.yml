@@ -40,11 +40,17 @@
   become: no
   shell: |
     ~/miniconda3/condabin/conda create --name pymongo_env -y
-    ~/miniconda3/condabin/conda install -n pymongo_env  -c conda-forge pymongo -y
+    ~/miniconda3/condabin/conda install -n pymongo_env  -c "conda-forge/label/cf202003" pymongo -y
   when: "'pymongo_env' not in conda_info_envs.stdout"
 
-- name: Ensure the pymongo module is successfully installed in the pymongo_env
+- name: Ensure the pymongo module successfully installed in the pymongo_env
   become: no
   shell: |
-    ~/miniconda3/condabin/conda list -n pymongo_env | grep pymongoobd
+    ~/miniconda3/condabin/conda list -n pymongo_env | grep pymongo
   ignore_errors: true
+
+- name: Restart mongod
+  become: yes
+  service:
+    name: mongod
+    state: restarted
