@@ -1,0 +1,4 @@
+---
+# tasks file for mongos-start-role
+- name: Start mongos service
+  include_tasks: start-mongos.yml

@@ -1,0 +1,10 @@
+---
+
+- name: Copy mongos.conf file
+  become: yes
+  copy:
+    src: ../files/mongod.conf
+    dest: /etc/
+
+- name: Start mongos
+  shell: mongos -f /etc/mongod.conf

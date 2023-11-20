@@ -20,3 +20,11 @@
 
   roles:
     - name: initialize-config-rs-role
+
+
+- name: Config and start mongos service
+  hosts: mongos
+  become: no
+
+  roles:
+    - name: mongos-start-role
