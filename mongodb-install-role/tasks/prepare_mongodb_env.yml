@@ -38,10 +38,6 @@
   register: libsslInfo
   ignore_errors: true
 
-- name: debug
-  debug:
-    msg: "{{ libsslInfo.stdout_lines }}"
-
 - name: Download libssl1.1
   get_url:
     url: http://ftp.de.debian.org/debian/pool/main/o/openssl/libssl1.1_1.1.1w-0+deb11u1_amd64.deb
@@ -52,4 +48,3 @@
   shell: |
     sudo dpkg -i /tmp/libssl1.1_1.1.1w-0+deb11u1_amd64.deb
   when: "'Status: install ok installed' not in libsslInfo.stdout_lines"
-

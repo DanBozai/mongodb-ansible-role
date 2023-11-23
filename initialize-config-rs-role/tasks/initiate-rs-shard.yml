@@ -1,0 +1,19 @@
+---
+- name: Copy 'initShards.py'
+  become: no
+  copy:
+    src: ../files/initShards.py
+    dest: ~/Downloads
+    mode: '0700'
+
+- name: Copy 'shards_config.yaml'
+  become: no
+  copy:
+    src: ~/shards_config.yaml
+    dest: ~/Downloads
+    mode: '0400'
+
+- name: Execute initShards.py
+  become: no
+  shell: ~/Downloads/initShards.py
+

@@ -1,0 +1,14 @@
+---
+# tasks file for initialize-config-rs-role
+
+- name: Install miniconda3 for python with pymongo module environment
+  include_tasks: install-miniconda3.yml
+
+- name: Create database admin user
+  include_tasks: create-user-admin.yml
+
+- name: Initialize replciation for config
+  include_tasks: initiate-rs-config.yml
+
+- name: Initialize replication for shards
+  include_tasks: initiate-rs-shard.yml

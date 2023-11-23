@@ -1,0 +1,64 @@
+---
+- name: Copy the script that download Miniconda3.sh script
+  become: no
+  copy:
+    src: ../files/miniconda_download.sh
+    dest: ~/Downloads/
+    mode: "0700"
+
+- name: Verify if miniconda3 directory exists
+  become: no
+  stat:
+    path: ~/miniconda3
+  register: miniconda3_dir
+
+- name: Execute miniconda_download.sh to download Miniconda3.sh
+  become: no
+  shell: bash ~/Downloads/miniconda_download.sh
+  when: not miniconda3_dir.stat.exists
+
+- name: Execute Miniconda3.sh installation script
+  become: no
+  shell: bash ~/Downloads/Miniconda3.sh -b -p ~/miniconda3
+  when: not miniconda3_dir.stat.exists
+
+- name: Initialize conda for shell interaction
+  become: no
+  shell: |
+    ~/miniconda3/condabin/conda init
+    . ~/.bashrc
+
+- name: Check if pymongo_env already exists
+  become: no
+  shell: |
+    ~/miniconda3/condabin/conda info --envs | grep pymongo_env
+  register: conda_info_envs
+  ignore_errors: true
+  changed_when: false
+
+- name: Create environment for pymongo, install pymongo module
+  become: no
+  shell: |
+    ~/miniconda3/condabin/conda create --name pymongo_env -y
+    ~/miniconda3/condabin/conda install -n pymongo_env  -c "conda-forge/label/cf202003" pymongo -y
+    ~/miniconda3/condabin/conda install -n pymongo_env  -c "conda-forge/label/cf201901" pyyaml -y
+  when: "'pymongo_env' not in conda_info_envs.stdout"
+
+
+- name: Ensure the pymongo module successfully installed in the pymongo_env
+  become: no
+  shell: |
+    ~/miniconda3/condabin/conda list -n pymongo_env | grep pymongo
+  ignore_errors: true
+
+- name: Ensure the pyyaml module successfully installed in the pymongo_env
+  become: no
+  shell: |
+    ~/miniconda3/condabin/conda list -n pymongo_env | grep pyyaml
+  ignore_errors: true
+
+- name: Restart mongod
+  become: yes
+  service:
+    name: mongod
+    state: restarted

@@ -1,0 +1,13 @@
+---
+- name: Copy a new 'mongod.conf' file
+  become: yes
+  copy:
+    src: ../files/mongod.conf
+    dest: /etc/mongod.conf
+
+- name: Restart mongod service
+  become: yes
+  service:
+    name: mongod
+    state: restarted
+    enabled: yes
