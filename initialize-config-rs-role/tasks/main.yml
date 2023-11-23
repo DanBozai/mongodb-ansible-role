@@ -7,5 +7,8 @@
 - name: Create database admin user
   include_tasks: create-user-admin.yml
 
-- name: Initialize config cluster servers with replica set
-  include_tasks: initialize-replica-set.yml
+- name: Initialize replciation for config
+  include_tasks: initiate-rs-config.yml
+
+- name: Initialize replication for shards
+  include_tasks: initiate-rs-shard.yml

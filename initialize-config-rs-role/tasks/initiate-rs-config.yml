@@ -29,10 +29,10 @@
     msg: "{{ result.stdout_lines }}"
 
 
-- name: verify if sv node is Master
-  community.mongodb.mongodb_shell:
-    login_port: "{{ mongod_config_server_port }}"
-    login_user: "{{ mongodb_user }}"
-    login_password: "{{ mongodb_passw }}"
-    login_database: "admin"
-    eval: "rs.status()"
+#- name: verify if sv node is Master
+#  community.mongodb.mongodb_shell:
+#    login_port: "{{ mongod_config_server_port }}"
+#    login_user: "{{ mongodb_user }}"
+#    login_password: "{{ mongodb_passw }}"
+#    login_database: "admin"
+#    eval: "rs.status()"

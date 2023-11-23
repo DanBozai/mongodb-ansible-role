@@ -6,5 +6,5 @@ mongodb_passw: "{{ lookup('env','MONGODB_PASSWORD') }}"
 mongod_config_server_port: 27019
 mongo_config_cluster_ips:
   - 192.168.1.198
-  - 192.168.1.138
-  - 192.168.1.173
+  - 192.168.1.136
+  - 192.168.1.172

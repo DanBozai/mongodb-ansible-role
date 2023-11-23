@@ -1,0 +1,4 @@
+---
+
+- name: add new 'mongod.conf' file and restart mongod
+  include_tasks: config-mongod-shard.yml

@@ -13,6 +13,12 @@
   roles:
    - name: mongodb-config-servers-role
 
+- name: Setup shard cluster
+  hosts: shard1_cluster shard_primary
+  become: no
+
+  roles:
+    - name: mongodb-shard-cluster-role
 
 - name: Initialize replica set config cluster
   hosts: config_cluster_primary
@@ -20,6 +26,35 @@
 
   roles:
     - name: initialize-config-rs-role
+
+- name: Change 'mongod.conf' file and restart mongod service for secondary shard servers
+  hosts: shard1_cluster shard_primary
+  become: yes
+  tasks:
+    - name: Copy new mongod.conf with authorization enabled
+      copy:
+        src: files/mongod.conf
+        dest: /etc/
+
+- name: Restart mongod service for replica servers
+  hosts: shard1_cluster
+  become: yes
+  tasks:
+    - name: Restart mongod service
+      service:
+        name: mongod
+        state: restarted
+
+
+- name: Restart mongod service for primary shard servers
+  hosts: shard_primary
+  become: yes
+  tasks:
+    - name: Restart mongod service
+      service:
+        name: mongod
+        state: restarted
+
 
 
 - name: Config and start mongos service
